@@ -1,4 +1,4 @@
-package appupdate;
+package pers.loren.appupdate;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -14,8 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
-
-import com.example.androidupdate.R;
 
 import java.io.File;
 import java.io.FileOutputStream;

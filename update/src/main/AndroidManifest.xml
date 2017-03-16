@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-    <application android:theme="@android:style/Theme.Holo.NoActionBar">
+    <application>
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="pers.loren.appupdate.fileprovider"
@@ -18,7 +18,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
         <service
-            android:name="appupdate.DownloadService"
+            android:name=".DownloadService"
             android:exported="false" />
     </application>
 
