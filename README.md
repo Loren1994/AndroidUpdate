@@ -21,7 +21,7 @@ dependencies {
 </code>
 </pre>
 
-#How to Use it ?
+# How to Use it ?
 <pre><code>
  AppUpdateUtils.checkUpdate(this, new AppUpdateUtils.CheckUpdateListener() {
             @Override
@@ -39,7 +39,7 @@ dependencies {
         });
 </code></pre>
 
-#ShowUpdateForceDialog &&  ShowUpdateDialog
+## ShowUpdateForceDialog &  ShowUpdateDialog
 <pre>
 <code>
 UpdateDialog.ShowUpdateForceDialog(MainActivity.this, 
@@ -53,15 +53,15 @@ UpdateDialog.ShowUpdateForceDialog(MainActivity.this,
 </code>
 </pre>
 
-#APIs Instructions
+# APIs Instructions
 
-####AppUpdateUtils.checkUpdate() : 
+#### AppUpdateUtils.checkUpdate() : 
 
 Auto bind ServiceConnection. If App is downloading , this function can not run .
 
-#####You need run unbindService() on Destory()
+##### You need run unbindService() on Destory()
 
 
-#╭∩╮(︶︿︶）╭∩╮
+# ╭∩╮(︶︿︶）╭∩╮
 
 
