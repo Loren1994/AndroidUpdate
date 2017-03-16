@@ -38,7 +38,8 @@ dependencies {
             }
         });
 </code></pre>
-# ShowUpdateForceDialog &&  ShowUpdateDialog
+
+#ShowUpdateForceDialog &&  ShowUpdateDialog
 <pre>
 <code>
 UpdateDialog.ShowUpdateForceDialog(MainActivity.this, 
@@ -53,8 +54,11 @@ UpdateDialog.ShowUpdateForceDialog(MainActivity.this,
 </pre>
 
 #APIs Instructions
+
 ####AppUpdateUtils.checkUpdate() : 
+
 Auto bind ServiceConnection. If App is downloading , this function can not run .
+
 #####You need run unbindService() on Destory()
 
 
