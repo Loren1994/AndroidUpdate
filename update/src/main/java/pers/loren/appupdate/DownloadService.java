@@ -1,10 +1,12 @@
 package pers.loren.appupdate;
 
 import android.app.IntentService;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
@@ -14,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,16 +26,20 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class DownloadService extends IntentService {
+    public static String APK_PATH = Environment.getExternalStorageDirectory() + "/update.apk";
+    public static String AUTHORITY = "pers.loren.appupdate.fileprovider";
 
-    public static final String APK_PATH =
-            Environment.getExternalStorageDirectory() + "/update.apk";
     private static final int BUFFER_SIZE = 10 * 1024; // 8k ~ 32K
     private static final int NOTIFICATION_ID = 0;
     private static final String TAG = "DownloadService";
+    private static final String NOTIFICATION_CHANNEL = "DownloadChannel";
+
     public boolean isDownloading = false;
-    private MyBinder myBinder;
+
     private Builder mBuilder;
     private NotificationManager mNotifyManager;
+
+    private MyBinder myBinder;
 
     public DownloadService() {
         super("DownloadService");
@@ -49,9 +56,16 @@ public class DownloadService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
         mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mBuilder = new Builder(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL, "下载",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription("下载升级文件");
+            channel.enableLights(true);
+            channel.setLightColor(Color.YELLOW);
+            mNotifyManager.createNotificationChannel(channel);
+        }
+        mBuilder = new Builder(this, NOTIFICATION_CHANNEL);
 
         String appName = getString(getApplicationInfo().labelRes);
         int icon = getApplicationInfo().icon;
@@ -73,15 +87,15 @@ public class DownloadService extends IntentService {
             urlConnection.setRequestProperty("Accept-Encoding", "gzip, deflate");
 
             urlConnection.connect();
-            long bytetotal = urlConnection.getContentLength();
-            long bytesum = 0;
-            int byteread = 0;
+            long byteTotal = urlConnection.getContentLength();
+            long byteSum = 0;
+            int byteRead;
             in = urlConnection.getInputStream();
-            File dir = StorageUtils.getCacheDirectory(this);
-            String apkName = urlStr.substring(urlStr.lastIndexOf("/") + 1, urlStr.length());
+//            File dir = StorageUtils.getCacheDirectory(this);
+//            String apkName = urlStr.substring(urlStr.lastIndexOf("/") + 1, urlStr.length());
             File apkFile = new File(APK_PATH);
             if (!apkFile.exists()) {
-                apkFile.createNewFile();
+                Log.i(TAG, "file create success:" + apkFile.createNewFile());
             }
 //            File apkFile = new File(dir, apkName);
             out = new FileOutputStream(apkFile);
@@ -89,11 +103,12 @@ public class DownloadService extends IntentService {
 
             isDownloading = true;
             int oldProgress = 0;
-            while ((byteread = in.read(buffer)) != -1) {
-                bytesum += byteread;
-                out.write(buffer, 0, byteread);
+            updateProgress(0);
+            while ((byteRead = in.read(buffer)) != -1) {
+                byteSum += byteRead;
+                out.write(buffer, 0, byteRead);
 
-                int progress = (int) (bytesum * 100L / bytetotal);
+                int progress = (int) (byteSum * 100L / byteTotal);
                 // 如果进度与之前进度相等，则不更新，如果更新太频繁，否则会造成界面卡顿
                 if (progress != oldProgress) {
                     updateProgress(progress);
@@ -109,7 +124,8 @@ public class DownloadService extends IntentService {
         } catch (Exception e) {
             isDownloading = false;
             e.printStackTrace();
-            Log.e(TAG, "download apk file error");
+            Toast.makeText(this, "下载更新失败", Toast.LENGTH_SHORT).show();
+            mNotifyManager.cancel(NOTIFICATION_ID);
         } finally {
             if (out != null) {
                 try {
@@ -129,9 +145,9 @@ public class DownloadService extends IntentService {
     }
 
     private void updateProgress(int progress) {
-        //"正在下载:" + progress + "%"
+        // "正在下载:" + progress + "%"
         mBuilder.setContentText(this.getString(R.string.android_auto_update_download_progress, progress)).setProgress(100, progress, false);
-        //setContentInent如果不设置在4.0+上没有问题，在4.0以下会报异常
+        // setContentIntent如果不设置在4.0+上没有问题，在4.0以下会报异常
         PendingIntent pendingintent = PendingIntent.getActivity(this, 0, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
         mBuilder.setContentIntent(pendingintent);
         mNotifyManager.notify(NOTIFICATION_ID, mBuilder.build());
@@ -139,7 +155,7 @@ public class DownloadService extends IntentService {
 
     private void installAPk(File apkFile) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        //如果没有设置SDCard写权限，或者没有sdcard,apk文件保存在内存中，需要授予权限才能安装
+        // 如果没有设置SDCard写权限，或者没有sdcard,apk文件保存在内存中，需要授予权限才能安装
         try {
             String[] command = {"chmod", "777", apkFile.toString()};
             ProcessBuilder builder = new ProcessBuilder(command);
@@ -151,7 +167,7 @@ public class DownloadService extends IntentService {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             uri = Uri.fromFile(apkFile);
         } else {
-            uri = FileProvider.getUriForFile(getApplicationContext(), "pers.loren.appupdate.fileprovider", apkFile);
+            uri = FileProvider.getUriForFile(getApplicationContext(), AUTHORITY, apkFile);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
         intent.setDataAndType(uri, "application/vnd.android.package-archive");
@@ -159,8 +175,9 @@ public class DownloadService extends IntentService {
         startActivity(intent);
     }
 
-    public class MyBinder extends Binder {
-        public DownloadService getService() {
+    class MyBinder
+            extends Binder {
+        DownloadService getService() {
             return DownloadService.this;
         }
     }

@@ -7,31 +7,45 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.IBinder;
 
+@SuppressWarnings("unused")
 public class AppUpdateUtils {
     private static CheckUpdateListener checkUpdateListener;
-    private static ServiceConnection sc = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            if (service != null) {
-                DownloadService ds = ((DownloadService.MyBinder) service).getService();
-                if (!ds.isDownloading) {
-                    checkUpdateListener.checkUpdate();
-                }
-            } else {
-                checkUpdateListener.checkUpdate();
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
+    private static ServiceConnection sc;
 
     private AppUpdateUtils() {
     }
 
     public static void checkUpdate(Context context, CheckUpdateListener checkUpdate) {
+        /*
+        bind check for failed download
+         */
+        if (sc != null) {
+            unbindService(context);
+        }
+        /*
+        null check for illegal exit
+         */
+        if (sc == null) {
+            sc = new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    if (service != null) {
+                        DownloadService ds = ((DownloadService.MyBinder) service).getService();
+                        if (!ds.isDownloading) {
+                            checkUpdateListener.checkUpdate();
+                        }
+                    } else {
+                        checkUpdateListener.checkUpdate();
+                    }
+                }
+
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+
+                }
+            };
+        }
+
         checkUpdateListener = checkUpdate;
         context.bindService(new Intent(context, DownloadService.class), sc, Context.BIND_AUTO_CREATE);
     }

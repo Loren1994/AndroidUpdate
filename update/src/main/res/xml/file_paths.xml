@@ -3,5 +3,5 @@
     <!--eg:/storage/emulated/0/PATH-->
     <external-path
         name="download"
-        path="" />
+        path="/" />
 </paths>
