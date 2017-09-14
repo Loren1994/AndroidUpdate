@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import static android.os.Environment.MEDIA_MOUNTED;
 
+@SuppressWarnings("unused")
 final class StorageUtils {
 
     private static final String EXTERNAL_STORAGE_PERMISSION = "android.permission.WRITE_EXTERNAL_STORAGE";
@@ -25,9 +26,6 @@ final class StorageUtils {
         if (appCacheDir == null) {
             appCacheDir = context.getCacheDir();
         }
-        if (appCacheDir == null) {
-
-        }
         return appCacheDir;
     }
 
@@ -41,9 +39,11 @@ final class StorageUtils {
                 return null;
             }
             try {
-                new File(appCacheDir, ".nomedia").createNewFile();
+                Log.i("Update",
+                        "file create success:" + new File(appCacheDir, ".nomedia").createNewFile());
             } catch (IOException e) {
-                Log.i("Update", "Can't create \".nomedia\" file in application external cache directory");
+                Log.i("Update",
+                        "Can't create \".nomedia\" file in application external cache directory");
             }
         }
         return appCacheDir;
