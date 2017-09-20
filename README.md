@@ -76,7 +76,7 @@ UpdateDialog.showUpdateDialog(MainActivity.this, "update your app",
 * AppUpdateUtils.checkUpdate() :  会自动绑定Service,如果app正在下载,则此方法不会再运行
 * 最后不要忘记在onDestory( )里用AppUpdateUtils.unbindService( )解绑Service
 
-###项目地址
+### 项目地址
 
 GitHub:https://github.com/Loren1994/AndroidUpdate  欢迎star~
 
