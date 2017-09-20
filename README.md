@@ -16,7 +16,7 @@ Step 2. Add the dependency
 <pre>
 <code>
 dependencies {
-    compile 'com.github.Loren1994:AndroidUpdate:1.0.0'
+     compile 'com.github.Loren1994:AndroidUpdate:1.1.0'
 }
 </code>
 </pre>
@@ -24,32 +24,32 @@ dependencies {
 # How to Use it ?
 <pre><code>
 AppUpdateUtils.checkUpdate(this, new AppUpdateUtils.CheckUpdateListener() {
-            @Override
-            public void checkUpdate() {
-                //add your check update interface
-                //showDialog in http callback
-                UpdateDialog.showUpdateDialog(MainActivity.this, "update your App", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        UpdateDialog.dismissDialog(); 
-                        Toast.makeText(MainActivity.this, "confirm button", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
+       @Override
+       public void checkUpdate() {
+           //add your check update interface
+           //showDialog in http callback
+           UpdateDialog.showUpdateDialog(MainActivity.this, "update your App", new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   UpdateDialog.dismissDialog(); 
+                   Toast.makeText(MainActivity.this, "confirm button", Toast.LENGTH_SHORT).show();
+               }
+           });
+       }
+});
 </code></pre>
 
 ## ShowUpdateForceDialog &  ShowUpdateDialog
 <pre>
 <code>
 UpdateDialog.showUpdateForceDialog(MainActivity.this, 
-	"update your app", new UpdateDialog.OnConfirmListener() {
-             @Override
-             public void onConfirm() {
-                   Toast.makeText(MainActivity.this, 
-                   "confirm", Toast.LENGTH_SHORT).show();
-             }
- });
+	  "update your app", new UpdateDialog.OnConfirmListener() {
+        @Override
+        public void onConfirm() {
+              Toast.makeText(MainActivity.this, 
+              "confirm", Toast.LENGTH_SHORT).show();
+        }
+});
 </code>
 </pre>
 
@@ -62,6 +62,6 @@ Auto bind ServiceConnection. If App is downloading , this function can not run .
 ##### You need run unbindService() on Destory()
 
 
-# ╭∩╮(︶︿︶）╭∩╮
+# <(▰˘◡˘▰)>
 
 
