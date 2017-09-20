@@ -1,65 +1,77 @@
 # AppUpdate
-You can use it to update your App. Support Android 8.0
 
-Step 1. Add the JitPack repository to your build file 
-<pre>
-<code>
+你可以通过它来升级你的App
+
+## 简介
+
+* 小巧便捷 , 使用方便
+* 自带强制/非强制性升级提示框 , 可替换弹框的颜色
+* HttpURLConnection下载 , 不引用额外的库
+* 支持Android8.0
+
+## 引用
+
+```Java
 allprojects {
     repositories {
-	    ...
-	    maven { url 'https://jitpack.io' }
+        ...
+        maven { url 'https://jitpack.io' }
     }
 }
-</code>
-</pre>
-Step 2. Add the dependency
-<pre>
-<code>
+```
+~~~~Java
 dependencies {
      compile 'com.github.Loren1994:AndroidUpdate:1.1.0'
 }
-</code>
-</pre>
+~~~~
 
-# How to Use it ?
-<pre><code>
-AppUpdateUtils.checkUpdate(this, new AppUpdateUtils.CheckUpdateListener() {
+# 用法
+```java
+ AppUpdateUtils.checkUpdate(this, new AppUpdateUtils.CheckUpdateListener() {
+
        @Override
        public void checkUpdate() {
            //add your check update interface
            //showDialog in http callback
-           UpdateDialog.showUpdateDialog(MainActivity.this, "update your App", new View.OnClickListener() {
+           UpdateDialog.showUpdateDialog(MainActivity.this, "update your App", new              View.OnClickListener() {
                @Override
                public void onClick(View v) {
                    UpdateDialog.dismissDialog(); 
-                   Toast.makeText(MainActivity.this, "confirm button", Toast.LENGTH_SHORT).show();
+                   Toast.makeText(MainActivity.this, "confirm                  button",Toast.LENGTH_SHORT).show();
                }
            });
        }
-});
-</code></pre>
 
-## ShowUpdateForceDialog &  ShowUpdateDialog
-<pre>
-<code>
+});
+```
+## 强制/非强制性升级提示框
+```java
 UpdateDialog.showUpdateForceDialog(MainActivity.this, 
-	  "update your app", new UpdateDialog.OnConfirmListener() {
+      "update your app", new UpdateDialog.OnConfirmListener() {
         @Override
         public void onConfirm() {
               Toast.makeText(MainActivity.this, 
               "confirm", Toast.LENGTH_SHORT).show();
         }
 });
-</code>
-</pre>
+```
+### 替换提示框颜色
 
-# APIs Instructions
+~~~~xml
+<color name="download_indicator_color">XXXX</color>
+~~~~
 
-#### AppUpdateUtils.checkUpdate() : 
+# Tips
 
-Auto bind ServiceConnection. If App is downloading , this function can not run .
+* AppUpdateUtils.checkUpdate() :  会自动绑定Service,如果app正在下载,则此方法不会再运行
 
-##### You need run unbindService() on Destory()
+* 最后不要忘记在onDestory( )里用AppUpdateUtils.unbindService( )解绑Service.
+
+  ​
+
+欢迎star~
+
+
 
 
 # <(▰˘◡˘▰)>
