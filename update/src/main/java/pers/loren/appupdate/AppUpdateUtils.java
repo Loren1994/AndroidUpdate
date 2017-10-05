@@ -51,7 +51,9 @@ public class AppUpdateUtils {
     }
 
     public static void unbindService(Context context) {
-        context.unbindService(sc);
+        if (sc != null) {
+            context.unbindService(sc);
+        }
         sc = null;
         checkUpdateListener = null;
     }
