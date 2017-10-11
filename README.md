@@ -21,7 +21,7 @@ allprojects {
 ```
 ~~~~Java
 dependencies {
-     compile 'com.github.Loren1994:AndroidUpdate:1.1.0'
+     compile 'com.github.Loren1994:AndroidUpdate:v1.1.2'
 }
 ~~~~
 
