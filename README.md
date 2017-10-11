@@ -27,21 +27,22 @@ dependencies {
 
 # 用法
 ```java
- AppUpdateUtils.checkUpdate(this, new AppUpdateUtils.CheckUpdateListener() {
-
-       @Override
-       public void checkUpdate() {
-           //add your check update interface
-           //showDialog in http callback
-           UpdateDialog.showUpdateDialog(MainActivity.this, "update your App", new              View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                   UpdateDialog.dismissDialog(); 
-                   Toast.makeText(MainActivity.this, "confirm                  button",Toast.LENGTH_SHORT).show();
-               }
-           });
-       }
-
+AppUpdateUtils.bindDownloadService(this, new AppUpdateUtils.CheckUpdateListener() {
+            @Override
+            public void checkUpdate() {
+                //模拟请求接口延时
+                SystemClock.sleep(3000);
+                //在这里请求你的检测更新接口
+                //在接口成功回调里判断是否更新,更新则弹Dialog
+                UpdateDialog.showUpdateDialog(MainActivity.this,
+                        "update your app", new UpdateDialog.OnConfirmListener() {
+                            @Override
+                            public void onConfirm() {
+                                //下载方法
+                                AppUpdateUtils.update(MainActivity.this,"URL");
+                            }
+                        });
+            }
 });
 ```
 ## 强制/非强制性升级提示框
@@ -73,8 +74,8 @@ UpdateDialog.showUpdateDialog(MainActivity.this, "update your app",
 
 # Tips
 
-* AppUpdateUtils.checkUpdate() :  会自动绑定Service,如果app正在下载,则此方法不会再运行
-* 最后不要忘记在onDestory( )里用AppUpdateUtils.unbindService( )解绑Service
+* AppUpdateUtils.bindDownloadService( ) :  service不为null会自动解绑
+* 不要忘记在onDestory( )里调用AppUpdateUtils.unbindDownloadService( )解绑Service
 
 ### 项目地址
 

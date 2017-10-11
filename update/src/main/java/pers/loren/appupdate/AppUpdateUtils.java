@@ -15,12 +15,12 @@ public class AppUpdateUtils {
     private AppUpdateUtils() {
     }
 
-    public static void checkUpdate(Context context, CheckUpdateListener checkUpdate) {
+    public static void bindDownloadService(Context context, CheckUpdateListener checkUpdate) {
         /*
         bind check for failed download
          */
         if (sc != null) {
-            unbindService(context);
+            unbindDownloadService(context);
         }
         /*
         null check for illegal exit
@@ -50,7 +50,7 @@ public class AppUpdateUtils {
         context.bindService(new Intent(context, DownloadService.class), sc, Context.BIND_AUTO_CREATE);
     }
 
-    public static void unbindService(Context context) {
+    public static void unbindDownloadService(Context context) {
         if (sc != null) {
             context.unbindService(sc);
         }
