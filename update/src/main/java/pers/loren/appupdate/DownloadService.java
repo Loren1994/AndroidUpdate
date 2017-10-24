@@ -26,14 +26,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class DownloadService extends IntentService {
-    public static String APK_PATH = Environment.getExternalStorageDirectory() + "/update.apk";
-    public static String AUTHORITY = "pers.loren.appupdate.fileprovider";
-
     private static final int BUFFER_SIZE = 10 * 1024; // 8k ~ 32K
     private static final int NOTIFICATION_ID = 0;
     private static final String TAG = "DownloadService";
     private static final String NOTIFICATION_CHANNEL = "DownloadChannel";
-
+    public static String APK_PATH = Environment.getExternalStorageDirectory() + "/update.apk";
+    public static String AUTHORITY = BuildConfig.APPLICATION_ID + "appupdate.fileprovider";
     public boolean isDownloading = false;
 
     private Builder mBuilder;

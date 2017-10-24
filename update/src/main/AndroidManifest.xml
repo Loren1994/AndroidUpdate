@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tool="http://schemas.android.com/tools"
     package="pers.loren.appupdate">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -10,10 +9,9 @@
 
     <application>
         <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="pers.loren.appupdate.fileprovider"
+            android:name=".LorenProvider"
+            android:authorities="${applicationId}.appupdate.fileprovider"
             android:exported="false"
-            tool:replace="android:authorities"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
