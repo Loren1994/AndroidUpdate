@@ -110,7 +110,7 @@ Error:Execution failed for task ':app:processDebugManifest'.
   	Suggestion: add 'tools:replace="android:authorities"' to <provider> element at AndroidManifest.xml:24:9-32:20 to override.
 ~~~~
 
-#####最终Manifest{#final}
+##### 最终Manifest {#final}
 
 ~~~~xml
 <!--app模块-->
@@ -147,7 +147,7 @@ update库里采用自定义的fileprovider , app模块里也需要写<provider>,
 * 不同App之间<provider>的name可以相同 , 但authorities不可以重复,否则后者App不能安装
 * 三方库的Manifest里引入tools , app里也引入了tools , 可能导致merge manifest fail
 
-####一点题外总结
+#### 一点题外总结
 
 设置applicationId时 :
 
