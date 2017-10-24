@@ -93,13 +93,13 @@ UpdateDialog.showUpdateDialog(MainActivity.this, "update your app",
 
 ##### 测试过程
 
-| 条件                                       | 结果                               |
-| ---------------------------------------- | -------------------------------- |
-| app模块:                                                                                             tools:replace="android:authorities"   android:name="android.support.v4.content.FileProvider"                                                        update模块:                                                                                            android:name="android.support.v4.content.FileProvider" | ✘编译不通过                           |
-| app模块:                                                                                             tools:replace="android:authorities"   android:name="android.support.v4.content.FileProvider"                                                        update模块:                                                                                            android:name=".LorenProvider" | ✔️编译通过✘TakePhoto调用崩溃             |
-| app模块:                                                                                             android:name="android.support.v4.content.FileProvider"                                                        update模块:                                                                                            android:name=".LorenProvider" | ✘编译不通过                           |
-| app模块:                                                                                           android:name="pers.loren.appupdate.ResolveConflictProvider"                                       update模块:                                                                                            android:name=".LorenProvider" | ✔️编译通过✔️TakePhoto调用正常✔️update库正常 |
-| app模块:                                                                                             tools:replace="android:authorities"   android:name="android.support.v4.content.FileProvider"                                                        update模块:                                                                          tools:replace="android:authorities"                                                                                       android:name="android.support.v4.content.FileProvider" | ✔️编译通过✘TakePhoto调用崩溃             |
+| 条件                                       | 结果                            |
+| ---------------------------------------- | ----------------------------- |
+| app模块:                                                                                             tools:replace="android:authorities"   android:name="android.support.v4.content.FileProvider"                                                        update模块:                                                                                            android:name="android.support.v4.content.FileProvider" | ✘编译不通过                        |
+| app模块:                                                                                             tools:replace="android:authorities"   android:name="android.support.v4.content.FileProvider"                                                        update模块:                                                                                            android:name=".LorenProvider" | ✔编译通过✘TakePhoto调用崩溃           |
+| app模块:                                                                                             android:name="android.support.v4.content.FileProvider"                                                        update模块:                                                                                            android:name=".LorenProvider" | ✘编译不通过                        |
+| app模块:                                                                                           android:name="pers.loren.appupdate.ResolveConflictProvider"                                       update模块:                                                                                            android:name=".LorenProvider" | ✔编译通过✔TakePhoto调用正常✔update库正常 |
+| app模块:                                                                                             tools:replace="android:authorities"   android:name="android.support.v4.content.FileProvider"                                                        update模块:                                                                          tools:replace="android:authorities"                                                                                       android:name="android.support.v4.content.FileProvider" | ✔编译通过✘TakePhoto调用崩溃           |
 
 ##### 冲突报错
 
@@ -110,7 +110,7 @@ Error:Execution failed for task ':app:processDebugManifest'.
   	Suggestion: add 'tools:replace="android:authorities"' to <provider> element at AndroidManifest.xml:24:9-32:20 to override.
 ~~~~
 
-##### 最终Manifest {#final}
+##### 最终Manifest
 
 ~~~~xml
 <!--app模块-->
@@ -151,16 +151,16 @@ update库里采用自定义的fileprovider , app模块里也需要写<provider>,
 
 设置applicationId时 :
 
- "pers.loren.test" : ✔️ 成功
+ "pers.loren.test" : ✔ 成功
 
  "pers.loren.test.1" : ✘ 编译通过 , install时提示解析安装包失败 (Android6.0)
 
- "pers.loren.test1" : ✔️ 成功
+ "pers.loren.test1" : ✔ 成功
 
 # Tips
 
 * 如果只引用这一个带有<provider>的库 , 则app里不需要写<provider>
-* 如果库之间有冲突 , 则参考 [最终Manifest](#final)
+* 如果库之间有冲突 , 则参考 [最终Manifest]( #最终Manifest )
 * AppUpdateUtils.bindDownloadService( ) :  service不为null会自动解绑
 * 不要忘记在onDestory( )里调用AppUpdateUtils.unbindDownloadService( )解绑Service
 
