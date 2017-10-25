@@ -139,14 +139,14 @@ Error:Execution failed for task ':app:processDebugManifest'.
 
 ##### 最终解决方案
 
-update库里采用自定义的fileprovider , app模块里也需要写<provider>, update模块提供ResolveConflictProvider以便app模块使用 , app模块里也可以自行建立fileprovider类
+update库里采用自定义的fileprovider , app模块里也需要写provider标签, update模块提供ResolveConflictProvider以便app模块使用 , app模块里也可以自行建立fileprovider类
 
 #### 一点总结
 
-* 同一App的多个库的<provider>的name都是android.support.v4.content.FileProvider时会引起冲突
+* 同一App的多个库的provider的name都是android.support.v4.content.FileProvider时会引起冲突
 * 上述情况可以通过写自定义FileProvider解决
-* 同一App不同库的<provider>的name用同一个自定义FileProvider也会引起冲突
-* 不同App之间<provider>的name可以相同 , 但authorities不可以重复,否则后者App不能安装
+* 同一App不同库的provider的name用同一个自定义FileProvider也会引起冲突
+* 不同App之间provider的name可以相同 , 但authorities不可以重复,否则后者App不能安装
 * 三方库的Manifest里引入tools , app里也引入了tools , 可能导致merge manifest fail
 
 #### 一点题外总结
@@ -161,7 +161,7 @@ update库里采用自定义的fileprovider , app模块里也需要写<provider>,
 
 # Tips
 
-* 如果只引用这一个带有<provider>的库 , 则app里不需要写<provider>
+* 如果只引用这一个带有provider的库 , 则app里不需要写provider
 * 如果库之间有冲突 , 则参考 [最终Manifest]( #最终Manifest )
 * AppUpdateUtils.bindDownloadService( ) :  service不为null会自动解绑
 * 不要忘记在onDestory( )里调用AppUpdateUtils.unbindDownloadService( )解绑Service
