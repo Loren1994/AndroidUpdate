@@ -31,7 +31,7 @@ public class DownloadService extends IntentService {
     private static final String TAG = "DownloadService";
     private static final String NOTIFICATION_CHANNEL = "DownloadChannel";
     public static String APK_PATH = Environment.getExternalStorageDirectory() + "/update.apk";
-    public static String AUTHORITY = BuildConfig.APPLICATION_ID + "appupdate.fileprovider";
+    //    public static String AUTHORITY = BuildConfig.APPLICATION_ID + "appupdate.fileprovider";
     public boolean isDownloading = false;
 
     private Builder mBuilder;
@@ -165,7 +165,7 @@ public class DownloadService extends IntentService {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             uri = Uri.fromFile(apkFile);
         } else {
-            uri = FileProvider.getUriForFile(getApplicationContext(), AUTHORITY, apkFile);
+            uri = FileProvider.getUriForFile(getApplicationContext(), this.getPackageName() + ".appupdate.fileprovider", apkFile);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
         intent.setDataAndType(uri, "application/vnd.android.package-archive");
