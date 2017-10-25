@@ -100,6 +100,7 @@ UpdateDialog.showUpdateDialog(MainActivity.this, "update your app",
 | app模块:                                                                                             android:name="android.support.v4.content.FileProvider"                                                        update模块:                                                                                            android:name=".LorenProvider" | ✘编译不通过                        |
 | app模块:                                                                                           android:name="pers.loren.appupdate.ResolveConflictProvider"                                       update模块:                                                                                            android:name=".LorenProvider" | ✔编译通过✔TakePhoto调用正常✔update库正常 |
 | app模块:                                                                                             tools:replace="android:authorities"   android:name="android.support.v4.content.FileProvider"                                                        update模块:                                                                          tools:replace="android:authorities"                                                                                       android:name="android.support.v4.content.FileProvider" | ✔编译通过✘TakePhoto调用崩溃           |
+| app模块:                                                                                           android:name="pers.loren.appupdate.ResolveConflictProvider"                                       update模块:                                                                                            android:name=".ResolveConflictProvider" | ✘编译不通过                        |
 
 ##### 冲突报错
 
@@ -144,6 +145,7 @@ update库里采用自定义的fileprovider , app模块里也需要写<provider>,
 
 * 同一App的多个库的<provider>的name都是android.support.v4.content.FileProvider时会引起冲突
 * 上述情况可以通过写自定义FileProvider解决
+* 同一App不同库的<provider>的name用同一个自定义FileProvider也会引起冲突
 * 不同App之间<provider>的name可以相同 , 但authorities不可以重复,否则后者App不能安装
 * 三方库的Manifest里引入tools , app里也引入了tools , 可能导致merge manifest fail
 

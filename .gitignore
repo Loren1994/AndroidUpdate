@@ -6,3 +6,6 @@
 build
 /captures
 app
+testlibrary
+update/libs/
+update/src/main/res/drawable/
