@@ -8,7 +8,7 @@
 * 自带强制/非强制性升级提示框 , 可替换弹框的颜色
 * HttpURLConnection下载 , 不引用额外的库
 * 解决三方库之间FileProvider冲突问题
-* ~~支持Android8.0~~
+* 支持Android8.0
 
 ## 引用
 
@@ -22,7 +22,7 @@ allprojects {
 ```
 ~~~~Java
 dependencies {
-     compile 'com.github.Loren1994:AndroidUpdate:1.1.4'
+     compile 'com.github.Loren1994:AndroidUpdate:1.2.0'
 }
 ~~~~
 
