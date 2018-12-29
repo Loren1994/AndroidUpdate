@@ -1,4 +1,4 @@
-package pers.loren.appupdate;
+package pers.loren.appupdate.utils;
 
 import android.content.Context;
 import android.content.pm.PackageManager;

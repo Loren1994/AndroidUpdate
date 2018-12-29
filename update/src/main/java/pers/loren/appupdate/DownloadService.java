@@ -16,7 +16,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,19 +24,20 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import pers.loren.appupdate.interfaces.UpdateDownloadListener;
+
 public class DownloadService extends IntentService {
-    private static final int BUFFER_SIZE = 10 * 1024; // 8k ~ 32K
-    private static final int NOTIFICATION_ID = 0;
-    private static final String TAG = "DownloadService";
     private static final String NOTIFICATION_CHANNEL = "DownloadChannel";
     public static String APK_PATH = Environment.getExternalStorageDirectory() + "/update.apk";
+    public static UpdateDownloadListener updateDownloadListener = null;
+    private final int BUFFER_SIZE = 10 * 1024; // 8k ~ 32K
+    private final String TAG = "DownloadService";
+    private final int NOTIFICATION_ID = 0;
     //    public static String AUTHORITY = BuildConfig.APPLICATION_ID + "appupdate.fileprovider";
     public boolean isDownloading = false;
-
     private Builder mBuilder;
     private NotificationManager mNotifyManager;
-
-    private MyBinder myBinder;
+    private DownloadBinder downloadBinder;
 
     public DownloadService() {
         super("DownloadService");
@@ -46,10 +46,10 @@ public class DownloadService extends IntentService {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        if (myBinder == null) {
-            myBinder = new MyBinder();
+        if (downloadBinder == null) {
+            downloadBinder = new DownloadBinder();
         }
-        return myBinder;
+        return downloadBinder;
     }
 
     @Override
@@ -64,10 +64,8 @@ public class DownloadService extends IntentService {
             mNotifyManager.createNotificationChannel(channel);
         }
         mBuilder = new Builder(this, NOTIFICATION_CHANNEL);
-
         String appName = getString(getApplicationInfo().labelRes);
         int icon = getApplicationInfo().icon;
-
         mBuilder.setContentTitle(appName).setSmallIcon(icon);
         String urlStr = intent.getStringExtra("url");
         InputStream in = null;
@@ -75,7 +73,6 @@ public class DownloadService extends IntentService {
         try {
             URL url = new URL(urlStr);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
             urlConnection.setRequestMethod("GET");
             urlConnection.setDoOutput(false);
             urlConnection.setConnectTimeout(10 * 1000);
@@ -83,7 +80,6 @@ public class DownloadService extends IntentService {
             urlConnection.setRequestProperty("Connection", "Keep-Alive");
             urlConnection.setRequestProperty("Charset", "UTF-8");
             urlConnection.setRequestProperty("Accept-Encoding", "gzip, deflate");
-
             urlConnection.connect();
             long byteTotal = urlConnection.getContentLength();
             long byteSum = 0;
@@ -98,45 +94,47 @@ public class DownloadService extends IntentService {
 //            File apkFile = new File(dir, apkName);
             out = new FileOutputStream(apkFile);
             byte[] buffer = new byte[BUFFER_SIZE];
-
             isDownloading = true;
             int oldProgress = 0;
             updateProgress(0);
             while ((byteRead = in.read(buffer)) != -1) {
                 byteSum += byteRead;
                 out.write(buffer, 0, byteRead);
-
                 int progress = (int) (byteSum * 100L / byteTotal);
                 // 如果进度与之前进度相等，则不更新，如果更新太频繁，否则会造成界面卡顿
                 if (progress != oldProgress) {
                     updateProgress(progress);
+                    UpdateDialog.setForceUpdateDialogProcess(progress);
+                    if (null != updateDownloadListener)
+                        updateDownloadListener.onDownloading(progress);
                 }
                 oldProgress = progress;
             }
             // 下载完成
             isDownloading = false;
+            if (null != updateDownloadListener)
+                updateDownloadListener.onDownloadSuccess();
             installAPk(apkFile);
-
             mNotifyManager.cancel(NOTIFICATION_ID);
-
         } catch (Exception e) {
             isDownloading = false;
-            e.printStackTrace();
-            Toast.makeText(this, "下载更新失败", Toast.LENGTH_SHORT).show();
+            if (null != updateDownloadListener)
+                updateDownloadListener.onDownloadFail(e.getMessage());
             mNotifyManager.cancel(NOTIFICATION_ID);
+            e.printStackTrace();
         } finally {
             if (out != null) {
                 try {
                     out.close();
-                } catch (IOException ignored) {
-
+                } catch (IOException e1) {
+                    e1.printStackTrace();
                 }
             }
             if (in != null) {
                 try {
                     in.close();
-                } catch (IOException ignored) {
-
+                } catch (IOException e2) {
+                    e2.printStackTrace();
                 }
             }
         }
@@ -160,8 +158,8 @@ public class DownloadService extends IntentService {
             String[] command = {"chmod", "777", apkFile.toString()};
             ProcessBuilder builder = new ProcessBuilder(command);
             builder.start();
-        } catch (IOException ignored) {
-            System.out.println(ignored.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         Uri uri;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
@@ -175,7 +173,7 @@ public class DownloadService extends IntentService {
         startActivity(intent);
     }
 
-    class MyBinder extends Binder {
+    class DownloadBinder extends Binder {
         DownloadService getService() {
             return DownloadService.this;
         }

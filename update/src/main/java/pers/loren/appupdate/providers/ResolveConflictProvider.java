@@ -1,4 +1,4 @@
-package pers.loren.appupdate;
+package pers.loren.appupdate.providers;
 
 import android.support.v4.content.FileProvider;
 

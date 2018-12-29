@@ -10,7 +10,7 @@
 
     <application>
         <provider
-            android:name=".LorenProvider"
+            android:name=".providers.LorenProvider"
             android:authorities="${applicationId}.appupdate.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">

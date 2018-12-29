@@ -10,11 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:paddingBottom="8dp"
         android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:text="提示"
         android:textColor="@color/text_black"
-        android:textSize="15sp" />
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <View
         android:id="@+id/top_line"
@@ -28,6 +29,16 @@
         android:layout_height="wrap_content"
         android:padding="15dp"
         android:textColor="@color/text_black" />
+
+    <pers.loren.appupdate.view.DownloadProcessView
+        android:id="@+id/process_view"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
 
     <View
         android:id="@+id/bottom_line"
@@ -50,8 +61,8 @@
             android:layout_weight="1"
             android:background="@color/download_indicator_color"
             android:gravity="center"
-            android:paddingBottom="10dp"
             android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:text="确定"
             android:textColor="@color/text_white" />
 
@@ -63,8 +74,8 @@
             android:layout_weight="1"
             android:background="@color/background_grey"
             android:gravity="center"
-            android:paddingBottom="10dp"
             android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:text="取消"
             android:textColor="@color/download_indicator_color" />
 
