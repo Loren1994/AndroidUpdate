@@ -1,6 +1,6 @@
 # AppUpdate
 
-##### [前往1.x文档](https://github.com/Loren1994/AndroidUpdate/blob/master/README-1.x.md)
+##### 👉🏼[前往1.x文档](https://github.com/Loren1994/AndroidUpdate/blob/master/README-1.x.md)
 
 你可以通过它来升级你的App。
 
@@ -14,7 +14,7 @@
 * 解决三方库之间FileProvider冲突问题
 * 支持Android 8
 
-### 2.0版本🔥
+### 🔥2.x版本🔥
 
 - [x] 重构API，调用方式更加简单
 
