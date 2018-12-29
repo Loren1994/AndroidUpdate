@@ -4,7 +4,7 @@
 
 你可以通过它来升级你的App。
 
-##### [![](https://jitpack.io/v/Loren1994/AndroidUpdate.svg)](https://jitpack.io/#Loren1994/AndroidUpdate)
+##### [![](https://jitpack.io/v/Loren1994/AndroidUpdate.svg)](https://jitpack.io/#Loren1994/AndroidUpdate)[![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16)
 
 ### 简介
 
@@ -14,7 +14,7 @@
 * 解决三方库之间FileProvider冲突问题
 * 支持Android 8
 
-### 2.0版本
+### 2.0版本🔥
 
 - [x] 重构API，调用方式更加简单
 
@@ -42,7 +42,7 @@ allprojects {
 ```
 ~~~~Java
 dependencies {
-     implementation 'com.github.Loren1994:AndroidUpdate:2.0.0'
+	implementation 'com.github.Loren1994:AndroidUpdate:2.0.0'
 }
 ~~~~
 
@@ -82,11 +82,11 @@ new AppUpdateManager.Builder()
 
 * 强制弹框
 
-![image01](/Users/loren/Downloads/image01.png)
+![image01](https://github.com/Loren1994/AndroidUpdate/blob/master/images/image01.png)
 
 * 非强制弹框
 
-![image02](/Users/loren/Downloads/image02.png)
+![image02](https://github.com/Loren1994/AndroidUpdate/blob/master/images/image02.png)
 
 ### 替换提示框颜色
 
