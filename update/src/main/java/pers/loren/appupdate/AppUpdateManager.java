@@ -14,12 +14,11 @@ import pers.loren.appupdate.interfaces.UpdateDownloadListener;
 public class AppUpdateManager {
 
     private static ServiceConnection sc = null;
-    private CheckUpdateListener checkUpdateListener;
 
     private AppUpdateManager() {
     }
 
-    private static void unbindDownloadService(Context context) {
+    public static void unbindDownloadService(Context context) {
         if (sc != null) {
             context.unbindService(sc);
         }

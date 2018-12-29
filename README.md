@@ -1,18 +1,36 @@
 # AppUpdate
 
+##### [前往1.x文档](https://github.com/Loren1994/AndroidUpdate/blob/master/README-1.x.md)
+
 你可以通过它来升级你的App。
 
-##### 1.x文档
+##### [![](https://jitpack.io/v/Loren1994/AndroidUpdate.svg)](https://jitpack.io/#Loren1994/AndroidUpdate)
 
-## 简介
+### 简介
 
 * 小巧便捷 , 使用方便
 * 自带强制/非强制性升级提示框 , 可替换弹框的颜色
 * HttpURLConnection下载 , 不引用额外的库
 * 解决三方库之间FileProvider冲突问题
-* 支持Android8.0
+* 支持Android 8
 
-## 引用
+### 2.0版本
+
+- [x] 重构API，调用方式更加简单
+
+- [x] 支持使用自定义弹框
+
+- [x] 升级库的support依赖
+
+- [x] 支持进度回调，对话框进度条，通知栏进度条展示
+
+- [x] 支持后台下载
+
+- [x] 支持强制更新
+
+- [x] 支持弹出框颜色替换
+
+### Gradle引入
 
 ```Java
 allprojects {
@@ -24,58 +42,59 @@ allprojects {
 ```
 ~~~~Java
 dependencies {
-     compile 'com.github.Loren1994:AndroidUpdate:1.2.0'
+     implementation 'com.github.Loren1994:AndroidUpdate:2.0.0'
 }
 ~~~~
 
-# 用法
+### API
+
 ```java
-AppUpdateUtils.bindDownloadService(this, new AppUpdateUtils.CheckUpdateListener() {
-            @Override
-            public void checkUpdate() {
-                //模拟请求接口延时
-                SystemClock.sleep(3000);
-                //在这里请求你的检测更新接口
-                //在接口成功回调里判断是否更新,更新则弹Dialog
-                UpdateDialog.showUpdateDialog(MainActivity.this,
-                        "update your app", new UpdateDialog.OnConfirmListener() {
-                            @Override
-                            public void onConfirm() {
-                                //下载方法
-                                AppUpdateUtils.update(MainActivity.this,"URL");
-                            }
-                        });
-            }
-});
+//首先请求你的检测更新接口 - 判断是否更新
+new AppUpdateManager.Builder()
+                .bind(this) //必须调用
+                .setDownloadUrl(url) //必须设置
+                .setDownloadListener(new UpdateDownloadListener() { //必须设置
+                    @Override
+                    public void onDownloading(int process) {
+                        Log.d("update", "onProcess: " + process);
+                    }
+
+                    @Override
+                    public void onDownloadSuccess() {
+                        Log.d("update", "下载完成");
+                    }
+
+                    @Override
+                    public void onDownloadFail(String reason) {
+                        Log.d("update", reason);
+                    }
+                })
+                .setUpdateMessage("检测到有新的版本,请下载升级.") //自带弹框显示的内容
+                .setShowDialog(true) //是否显示自带的弹框
+                .setForceUpdate(true) //是否显示自带的强制弹框
+                .build();
 ```
-## 强制/非强制性升级提示框
-```java
-//强制
-UpdateDialog.showUpdateForceDialog(MainActivity.this, 
-      "update your app", new UpdateDialog.OnConfirmListener() {
-        @Override
-        public void onConfirm() {
-              Toast.makeText(MainActivity.this, 
-              "confirm", Toast.LENGTH_SHORT).show();
-        }
-});
-//非强制
-UpdateDialog.showUpdateDialog(MainActivity.this, "update your app", 
-                               new UpdateDialog.OnConfirmListener() {
-        @Override
-        public void onConfirm() {
-            Toast.makeText(MainActivity.this, 
-                         "confirm",Toast.LENGTH_SHORT).show();
-        }
-});
-```
+### 说明
+
+> 库中带有两种提示框，分为强制性更新框和非强制性更新框，可通过setForceUpdate设置。
+>
+> 若不使用自带的提示框，可设置setShowDialog(false)不显示弹框，则AppUpdateManager可看做只是下载的方法。在这之前加入自己的弹框和页面逻辑即可。
+
+* 强制弹框
+
+![image01](/Users/loren/Downloads/image01.png)
+
+* 非强制弹框
+
+![image02](/Users/loren/Downloads/image02.png)
+
 ### 替换提示框颜色
 
 ~~~~xml
 <color name="download_indicator_color">XXXX</color>
 ~~~~
 
-#### 关于FileProvider冲突的问题
+### 关于FileProvider冲突的问题
 
 以下用TakePhoto 4.0.3测试冲突问题
 
@@ -143,7 +162,7 @@ Error:Execution failed for task ':app:processDebugManifest'.
 
 update库里采用自定义的fileprovider , app模块里也需要写provider标签, update模块提供ResolveConflictProvider以便app模块使用 , app模块里也可以自行建立fileprovider类
 
-#### 一点总结
+### 一点总结
 
 * 同一App的多个库的provider的name都是android.support.v4.content.FileProvider时会引起冲突
 * 上述情况可以通过写自定义FileProvider解决
@@ -151,22 +170,12 @@ update库里采用自定义的fileprovider , app模块里也需要写provider标
 * 不同App之间provider的name可以相同 , 但authorities不可以重复,否则后者App不能安装
 * 三方库的Manifest里引入tools , app里也引入了tools , 可能导致merge manifest fail
 
-#### 一点题外总结
-
-设置applicationId时 :
-
- "pers.loren.test" : ✔ 成功
-
- "pers.loren.test.1" : ✘ 编译通过 , install时提示解析安装包失败 (Android6.0)
-
- "pers.loren.test1" : ✔ 成功
-
-# Tips
+### Tips
 
 * 如果只引用这一个带有provider的库 , 则app里不需要写provider
 * 如果库之间有冲突 , 则参考 [最终Manifest]( #最终Manifest )
-* AppUpdateUtils.bindDownloadService( ) :  service不为null会自动解绑
-* 不要忘记在onDestory( )里调用AppUpdateUtils.unbindDownloadService( )解绑Service
+* build()方法里已判断ServiceConnection不为null时首先解绑
+* 可以调用AppUpdateManager.unbindDownloadService(this)解绑Service
 
 ### 项目地址
 
