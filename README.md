@@ -76,9 +76,11 @@ new AppUpdateManager.Builder()
 ```
 ### 说明
 
-> 库中带有两种提示框，分为强制性更新框和非强制性更新框，可通过setForceUpdate设置。
+> ⚠️ 所需相关权限需要在自己的App中申请。
 >
-> 若不使用自带的提示框，可设置setShowDialog(false)不显示弹框，则AppUpdateManager可看做只是下载的方法。在这之前加入自己的弹框和页面逻辑即可。
+> ⚠️ 库中带有两种提示框，分为强制性更新框和非强制性更新框，可通过setForceUpdate设置。
+>
+> ⚠️ 若不使用自带的提示框，可设置setShowDialog(false)不显示弹框，则AppUpdateManager可看做只是下载的方法。在这之前加入自己的弹框和页面逻辑即可。
 
 * 强制弹框
 
