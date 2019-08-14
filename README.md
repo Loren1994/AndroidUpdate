@@ -42,7 +42,7 @@ allprojects {
 ```
 ~~~~Java
 dependencies {
-	implementation 'com.github.Loren1994:AndroidUpdate:2.0.1'
+	implementation 'com.github.Loren1994:AndroidUpdate:2.0.2'
 }
 ~~~~
 
