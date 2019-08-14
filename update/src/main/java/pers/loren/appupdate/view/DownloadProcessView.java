@@ -76,7 +76,7 @@ public class DownloadProcessView extends View {
             percentValue = "100%";
         }
         initCurrentProgressBar();
-        invalidate();
+        postInvalidate();
     }
 
     /**
